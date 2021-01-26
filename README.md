@@ -24,6 +24,8 @@ All code is written in Python3 and provided as separate scripts and all-together
 ## Contact
 This lecture was delivered by the TA team consisting of
 
-- Filippos Christianos [f.christianos@ed.ac.uk](mailto:f.christianos@ed.ac.uk)
-- Georgios Papoudakis [g.papoudakis@ed.ac.uk](mailto:g.papoudakis@ed.ac.uk)
-- Lukas Schäfer [l.schaefer@ed.ac.uk](mailto:l.schaefer@ed.ac.uk)
+- Filippos Christianos
+- Georgios Papoudakis
+- Lukas Schäfer
+
+For any questions, please post on [Piazza](https://piazza.com/class/kd5w5pol81p788) or see us at your demonstration sessions.
