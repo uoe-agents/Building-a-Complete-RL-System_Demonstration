@@ -1,11 +1,10 @@
-from abc import ABC
 from collections import defaultdict
 import numpy as np
 import random
 from typing import DefaultDict
 
 
-class SARSA(ABC):
+class SARSA():
     """Base class for SARSA agent
 
     :attr n_acts (int): number of actions
