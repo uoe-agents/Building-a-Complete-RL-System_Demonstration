@@ -4,7 +4,8 @@ import random
 import time
 from tqdm import tqdm
 
-from sarsa import SARSA
+# from sarsa import SARSA
+from sarsa_solution import SARSA
 
 
 CONFIG = {

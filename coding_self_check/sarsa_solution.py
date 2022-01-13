@@ -46,9 +46,15 @@ class Agent(ABC):
         :param obs (int): received observation representing the current environmental state
         :return (int): index of selected action
         """
-        ### IMPLEMENTATION NEEDED ###
-        raise NotImplementedError("act needs to be implemented for SARSA!")
-        return 0
+        ### SOLUTION BELOW ###
+        act_vals = [self.q_table[(obs, act)] for act in range(self.n_acts)]
+        max_val = max(act_vals)
+        max_acts = [idx for idx, act_val in enumerate(act_vals) if act_val == max_val]
+
+        if random.random() < self.epsilon:
+            return random.randint(0, self.n_acts - 1)
+        else:
+            return random.choice(max_acts)
 
     @abstractmethod
     def schedule_hyperparameters(self, timestep: int, max_timestep: int):
@@ -110,9 +116,13 @@ class SARSA(Agent):
         :param done (bool): flag indicating whether a terminal state has been reached
         :return (float): updated Q-value for current observation-action pair
         """
-        ### IMPLEMENTATION NEEDED ###
-        raise NotImplementedError("learn needs to be implemented for SARSA!")
-        return 0.0
+        ### SOLUTION BELOW ###
+        target_value = reward + self.gamma * (1 - done) * self.q_table[(n_obs, n_action)]
+        self.q_table[(obs, action)] += self.alpha * (
+            target_value - self.q_table[(obs, action)]
+        )
+        return self.q_table[(obs, action)]
+
 
     def schedule_hyperparameters(self, timestep: int, max_timestep: int):
         """Updates the hyperparameters
