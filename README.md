@@ -1,7 +1,7 @@
 # Demonstration code for the "Building a complete RL system" lecture
 
 ## Introduction
-This code demonstrates our implementation of SARSA for the [Taxi-v3](https://gym.openai.com/envs/Taxi-v3/) environment and serves as additional information to go alongside the "Building a complete RL system" lecture.
+This code demonstrates our implementation of SARSA for the [Taxi-v3](https://www.gymlibrary.dev/environments/toy_text/taxi/) environment and serves as additional information to go alongside the "Building a complete RL system" lecture.
 The lecture is delivered as part of the [Reinforcement Learning (2023) course](http://www.drps.ed.ac.uk/22-23/dpt/cxinfr11010.htm) at the University of Edinburgh.
 
 ## Dependencies
