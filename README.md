@@ -2,7 +2,7 @@
 
 ## Introduction
 This code demonstrates our implementation of SARSA for the [Taxi-v3](https://gym.openai.com/envs/Taxi-v3/) environment and serves as additional information to go alongside the "Building a complete RL system" lecture.
-The lecture is delivered as part of the [Reinforcement Learning (2022) course](http://www.drps.ed.ac.uk/21-22/dpt/cxinfr11010.htm) at the University of Edinburgh.
+The lecture is delivered as part of the [Reinforcement Learning (2023) course](http://www.drps.ed.ac.uk/22-23/dpt/cxinfr11010.htm) at the University of Edinburgh.
 
 ## Dependencies
 To run the python code, you will need [OpenAI Gym](https://gym.openai.com), [Matplotlib](https://matplotlib.org/) and [NumPy](https://numpy.org/) which can be installed using
@@ -19,7 +19,7 @@ All code is written in Python3 and provided as separate scripts and all-together
 ## Contact
 This lecture was delivered by the TA team consisting of
 
-- Filippos Christianos
-- Lukas Schäfer
+- Samuel Garcin
+- Shangmin Guo
 
-For any questions, please post on [Piazza](https://piazza.com/class/ktli2bzl5nsus) or see us at your demonstration sessions.
+For any questions, please post on [Piazza](https://piazza.com/class/lcuftvg9i510b) or see us at your demonstration sessions.
