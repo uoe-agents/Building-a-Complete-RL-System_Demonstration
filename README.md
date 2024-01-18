@@ -7,7 +7,7 @@ The lecture is delivered as part of the [Reinforcement Learning (2023) course](h
 ## Dependencies
 To run the python code, you will need [OpenAI Gym](https://gym.openai.com), [Matplotlib](https://matplotlib.org/) and [NumPy](https://numpy.org/) which can be installed using
 
-    pip install gym matplotlib numpy
+    pip install gym==0.21.0 matplotlib numpy
 
 ## Jupyter Notebook
 **We recommend going through the jupyter notebook file of this demonstration in your own time!** This includes further information and explanations to understand this demonstration and learn more about good practises in RL evaluation.
