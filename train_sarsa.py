@@ -1,4 +1,4 @@
-import gym
+import gymnasium as gym
 import matplotlib.pyplot as plt
 import numpy as np
 import random
@@ -22,7 +22,7 @@ RENDER = False
 SEEDS = 10
 
 
-def evaluate(env, config, q_table, render=False):
+def evaluate(env, config, q_table):
     """
     Evaluate configuration of SARSA on given environment initialised with given Q-table
 
@@ -42,10 +42,7 @@ def evaluate(env, config, q_table, render=False):
     eval_agent.q_table = q_table
     episodic_returns = []
     for eps_num in range(config["eval_episodes"]):
-        obs = env.reset()
-        if render:
-            env.render()
-            sleep(1)
+        obs, _ = env.reset()
         episodic_return = 0
         done = False
 
@@ -53,10 +50,8 @@ def evaluate(env, config, q_table, render=False):
         while not done and steps <= config["max_episode_steps"]:
             steps += 1
             act = eval_agent.act(obs)
-            n_obs, reward, done, info = env.step(act)
-            if render:
-                env.render()
-                sleep(1)
+            n_obs, reward, terminated, truncated, info = env.step(act)
+            done = terminated or truncated
 
             episodic_return += reward
 
@@ -70,7 +65,7 @@ def evaluate(env, config, q_table, render=False):
     return mean_return, std_return, negative_returns
 
 
-def train(env, config, output=True):
+def train(env, eval_env, config, output=True):
     """
     Train and evaluate SARSA on given environment with provided hyperparameters
 
@@ -96,7 +91,7 @@ def train(env, config, output=True):
     evaluation_epsilons = []
 
     for eps_num in range(config["total_eps"]):
-        obs = env.reset()
+        obs, _ = env.reset()
         episodic_return = 0
         steps = 0
         done = False
@@ -105,7 +100,8 @@ def train(env, config, output=True):
         act = agent.act(obs)
 
         while not done and steps < config["max_episode_steps"]:
-            n_obs, reward, done, info = env.step(act)
+            n_obs, reward, terminated, truncated, info = env.step(act)
+            done = terminated or truncated
             step_counter += 1
             episodic_return += reward
 
@@ -118,10 +114,9 @@ def train(env, config, output=True):
 
         if eps_num % config["eval_freq"] == 0:
             mean_return, std_return, negative_returns = evaluate(
-                    env,
+                    eval_env,
                     config,
-                    agent.q_table,
-                    render=RENDER,
+                    agent.q_table
             )
             if output:
                 print(f"EVALUATION: EP {eps_num} - MEAN RETURN {mean_return} +/- {std_return} ({negative_returns}/{config['eval_episodes']} failed episodes)")
@@ -145,18 +140,23 @@ if __name__ == "__main__":
     axes.set_ylim([-100,20])
 
     env = gym.make("Taxi-v3")
+    eval_env = gym.make("Taxi-v3", render_mode="human") if RENDER else env
 
     num_returns = CONFIG["total_eps"] // CONFIG["eval_freq"]
 
     eval_returns = np.zeros((SEEDS, num_returns))
     for i in range(SEEDS):
         print(f"Executing training for SARSA - run {i + 1}")
-        env.seed(i * 100)
-        returns, _, epsilons, q_table = train(env, CONFIG, output=False)
+        env.reset(seed=i*100)
+        if RENDER:
+            eval_env.reset(seed=i*100)
+        returns, _, epsilons, q_table = train(env, eval_env, CONFIG, output=False)
         returns = np.array(returns)
         eval_returns[i, :] = returns
+    eval_env.close()
     returns_total = eval_returns.mean(axis=0)
     returns_std = eval_returns.std(axis=0)
     plot_timesteps(CONFIG["eval_freq"], returns_total, returns_std, "Episodes", "Mean Eval Returns", "Sarsa")
 
     plt.show()
+

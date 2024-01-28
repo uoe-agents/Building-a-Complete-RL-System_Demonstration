@@ -1,4 +1,4 @@
-import gym
+import gymnasium as gym
 import numpy as np
 import random
 import time
@@ -21,7 +21,7 @@ CONFIG = {
 RENDER = False
 
 
-def evaluate(env, agent, max_steps, eval_episodes, render):
+def evaluate(env, agent, max_steps, eval_episodes):
     """
     Evaluate configuration on given environment when initialised with given Q-table
 
@@ -29,25 +29,19 @@ def evaluate(env, agent, max_steps, eval_episodes, render):
     :param agent (Agent): agent to act in environment
     :param max_steps (int): max number of steps per evaluation episode
     :param eval_episodes (int): number of evaluation episodes
-    :param render (bool): flag whether evaluation runs should be rendered
     :return (float, float): mean and std of returns received over episodes
     """
     episodic_returns = []
     for eps_num in range(eval_episodes):
-        obs = env.reset()
-        if (eps_num == eval_episodes - 1) and render:
-            env.render()
-            time.sleep(0.5)
+        obs, _ = env.reset()
         episodic_return = 0
         done = False
         steps = 0
 
         while not done and steps < max_steps:
             act = agent.act(obs)
-            n_obs, reward, done, info = env.step(act)
-            if (eps_num == eval_episodes - 1) and render:
-                env.render()
-                time.sleep(0.5)
+            n_obs, reward, terminated, truncated, info = env.step(act)
+            done = terminated or truncated
 
             episodic_return += reward
             steps += 1
@@ -62,7 +56,7 @@ def evaluate(env, agent, max_steps, eval_episodes, render):
     return mean_return, std_return
 
 
-def train(env, config):
+def train(env, eval_env, config):
     """
     Train and evaluate SARSA on given environment with provided hyperparameters
 
@@ -84,7 +78,7 @@ def train(env, config):
 
     with tqdm(total=config["total_steps"]) as pbar:
         while completed_steps < config["total_steps"]:
-            obs = env.reset()
+            obs, _ = env.reset()
             episodic_return = 0
             steps = 0
             done = False
@@ -93,7 +87,8 @@ def train(env, config):
             act = agent.act(obs)
 
             while not done and steps < config["episode_length"]:
-                n_obs, reward, done, info = env.step(act)
+                n_obs, reward, terminated, truncated, info = env.step(act)
+                done = terminated or truncated
                 steps += 1
                 episodic_return += reward
 
@@ -109,11 +104,10 @@ def train(env, config):
 
             if completed_evaluations < completed_steps / config["eval_freq"]:
                 mean_return, std_return = evaluate(
-                        env,
+                        eval_env,
                         agent,
                         config["episode_length"],
                         config["eval_episodes"],
-                        render=RENDER,
                 )
                 completed_evaluations += 1
                 pbar.write(f"EVALUATION: {completed_steps} STEPS - RETURNS {mean_return} +/- {std_return}")
@@ -124,4 +118,7 @@ def train(env, config):
 
 if __name__ == "__main__":
     env = gym.make("Taxi-v3")
-    returns, q_table = train(env, CONFIG)
+    eval_env = gym.make("Taxi-v3", render_mode="human") if RENDER else env
+    returns, q_table = train(env, eval_env, CONFIG)
+    if RENDER:
+        eval_env.close()

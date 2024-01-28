@@ -1,5 +1,5 @@
 import contextlib
-import gym
+import gymnasium as gym
 import sys
 import termios
 import time
@@ -71,7 +71,8 @@ def human_player(env):
         input = get_keyboard_code()
         if input == -1:
             return
-        _, rew, done, _ = env.step(input)
+        _, rew, terminated, truncated, _ = env.step(input)
+        done = terminated or truncated
         ep_return += rew
         env.render()
         if done:

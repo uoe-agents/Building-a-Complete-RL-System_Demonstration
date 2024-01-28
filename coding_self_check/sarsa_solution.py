@@ -2,8 +2,9 @@ from abc import ABC, abstractmethod
 from collections import defaultdict
 import random
 from typing import List, Dict, DefaultDict
-from gym.spaces import Space
-from gym.spaces.utils import flatdim
+from gymnasium.spaces import Space
+from gymnasium.spaces.utils import flatdim
+from gymnasium.spaces.utils import flatdim
 
 
 class Agent(ABC):
